@@ -1,1 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Laboratory Asset Management</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>LAB ASSET</h2>
+
+        <p id="userName">User</p>
+
+        <span id="userRole" class="role-badge">
+            ROLE
+        </span>
+
+        <nav id="navigation">
+
+            <button onclick="showSection('dashboard')">
+                Dashboard
+            </button>
+
+            <button onclick="showSection('equipment')">
+                Equipment
+            </button>
+
+            <button onclick="showSection('requests')">
+                Borrowing Requests
+            </button>
+
+            <button onclick="showSection('maintenance')">
+                Maintenance
+            </button>
+
+            <button
+                id="usersNav"
+                onclick="showSection('users')">
+                Users
+            </button>
+
+            <button
+                id="auditNav"
+                onclick="showSection('audit')">
+                Audit Logs
+            </button>
+
+        </nav>
+
+        <button
+            class="logout-button"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboard" class="section">
+
+            <h1>Dashboard</h1>
+
+            <p>
+                Welcome to the Laboratory Asset Transaction
+                and Approval Management System.
+            </p>
+
+            <div class="cards">
+
+                <div class="card">
+                    <h3>Total Equipment</h3>
+                    <strong id="totalEquipment">0</strong>
+                </div>
+
+                <div class="card">
+                    <h3>Available Equipment</h3>
+                    <strong id="availableEquipment">0</strong>
+                </div>
+
+                <div class="card">
+                    <h3>Pending Requests</h3>
+                    <strong id="pendingRequests">0</strong>
+                </div>
+
+                <div class="card">
+                    <h3>My Requests</h3>
+                    <strong id="myRequests">0</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- EQUIPMENT -->
+
+        <section id="equipment" class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+                    <h1>Equipment</h1>
+
+                    <p>
+                        Laboratory equipment and asset inventory.
+                    </p>
+                </div>
+
+                <button
+                    id="addEquipmentButton"
+                    class="btn-primary"
+                    onclick="openEquipmentForm()">
+                    + Add Equipment
+                </button>
+
+            </div>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Asset Code</th>
+                            <th>Equipment</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Available</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th id="equipmentActionsHeader">
+                                Actions
+                            </th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="equipmentTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- REQUESTS -->
+
+        <section id="requests" class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h1>Borrowing Requests</h1>
+
+                    <p>
+                        Manage borrowing transactions and approvals.
+                    </p>
+
+                </div>
+
+                <button
+                    class="btn-primary"
+                    onclick="openRequestForm()">
+                    + New Request
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Requester</th>
+                            <th>Equipment</th>
+                            <th>Quantity</th>
+                            <th>Purpose</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="requestsTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- MAINTENANCE -->
+
+        <section id="maintenance"
+                 class="section hidden">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h1>Maintenance</h1>
+
+                    <p>
+                        Submit and manage equipment maintenance.
+                    </p>
+
+                </div>
+
+                <button
+                    class="btn-primary"
+                    onclick="openMaintenanceForm()">
+                    + Maintenance Request
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Equipment</th>
+                            <th>Issue</th>
+                            <th>Requested By</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="maintenanceTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- USERS -->
+
+        <section id="users"
+                 class="section hidden">
+
+            <h1>User Management</h1>
+
+            <p>
+                Administrator can update user roles.
+            </p>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="usersTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- AUDIT -->
+
+        <section id="audit"
+                 class="section hidden">
+
+            <h1>Audit Logs</h1>
+
+            <p>
+                Critical system activities are recorded here.
+            </p>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Module</th>
+                            <th>Record ID</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="auditTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- EQUIPMENT MODAL -->
+
+<div id="equipmentModal"
+     class="modal hidden">
+
+    <div class="modal-content">
+
+        <span class="close"
+              onclick="closeModal('equipmentModal')">
+            &times;
+        </span>
+
+        <h2>Add Equipment</h2>
+
+        <form id="equipmentForm">
+
+            <label>Asset Code</label>
+
+            <input
+                type="text"
+                id="assetCode"
+                placeholder="LAP-002"
+                required
+            >
+
+            <label>Equipment Name</label>
+
+            <input
+                type="text"
+                id="equipmentName"
+                required
+            >
+
+            <label>Category</label>
+
+            <input
+                type="text"
+                id="equipmentCategory"
+            >
+
+            <label>Description</label>
+
+            <textarea id="equipmentDescription"></textarea>
+
+            <label>Quantity</label>
+
+            <input
+                type="number"
+                id="equipmentQuantity"
+                min="1"
+                value="1"
+                required
+            >
+
+            <label>Location</label>
+
+            <input
+                type="text"
+                id="equipmentLocation"
+            >
+
+            <button
+                type="submit"
+                class="btn-primary">
+                Save Equipment
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- REQUEST MODAL -->
+
+<div id="requestModal"
+     class="modal hidden">
+
+    <div class="modal-content">
+
+        <span class="close"
+              onclick="closeModal('requestModal')">
+            &times;
+        </span>
+
+        <h2>Borrowing Request</h2>
+
+        <form id="requestForm">
+
+            <label>Equipment</label>
+
+            <select
+                id="requestEquipment"
+                required>
+            </select>
+
+            <label>Quantity</label>
+
+            <input
+                type="number"
+                id="requestQuantity"
+                value="1"
+                min="1"
+                required
+            >
+
+            <label>Purpose</label>
+
+            <textarea
+                id="requestPurpose"
+                required>
+            </textarea>
+
+            <label>Due Date</label>
+
+            <input
+                type="date"
+                id="requestDueDate"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn-primary">
+                Submit Request
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- MAINTENANCE MODAL -->
+
+<div id="maintenanceModal"
+     class="modal hidden">
+
+    <div class="modal-content">
+
+        <span class="close"
+              onclick="closeModal('maintenanceModal')">
+            &times;
+        </span>
+
+        <h2>Maintenance Request</h2>
+
+        <form id="maintenanceForm">
+
+            <label>Equipment</label>
+
+            <select
+                id="maintenanceEquipment"
+                required>
+            </select>
+
+            <label>Problem</label>
+
+            <textarea
+                id="maintenanceIssue"
+                required>
+            </textarea>
+
+            <button
+                type="submit"
+                class="btn-primary">
+                Submit
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="js/supabase.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
