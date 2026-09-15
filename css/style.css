@@ -813,69 +813,40 @@ tbody tr:last-child td {
 
 /* =========================================================
    LOGIN PAGE
-   UPDATED / CLEANER DESIGN
 ========================================================= */
 
 .login-page {
     min-height: 100vh;
 
-    background: #172554;
+    background: linear-gradient(
+        135deg,
+        #172554 0%,
+        #1e3a8a 50%,
+        #2563eb 100%
+    );
 
     display: flex;
-
     justify-content: center;
-
     align-items: center;
 
-    padding: 30px 20px;
+    padding: 40px 20px;
 
     position: relative;
 
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 
-/* DECORATIVE BACKGROUND */
-
-.login-page::before {
-    content: "";
-
-    position: absolute;
-
-    width: 450px;
-    height: 450px;
-
-    background: rgba(37, 99, 235, 0.25);
-
-    border-radius: 50%;
-
-    top: -180px;
-    left: -180px;
-}
-
-.login-page::after {
-    content: "";
-
-    position: absolute;
-
-    width: 400px;
-    height: 400px;
-
-    background: rgba(59, 130, 246, 0.15);
-
-    border-radius: 50%;
-
-    bottom: -180px;
-    right: -150px;
-}
-
-
-/* LOGIN CONTAINER */
+/* =========================================================
+   LOGIN CONTAINER
+========================================================= */
 
 .login-container {
     width: 100%;
 
     max-width: 430px;
+
+    margin: auto;
 
     position: relative;
 
@@ -883,29 +854,34 @@ tbody tr:last-child td {
 }
 
 
-/* LOGIN CARD */
+/* =========================================================
+   LOGIN CARD
+========================================================= */
 
 .login-card {
-    background: white;
-
     width: 100%;
 
-    padding: 40px 38px 35px;
+    background: #ffffff;
+
+    padding: 38px 40px;
 
     border-radius: 14px;
 
+    border: 1px solid #e2e8f0;
+
     box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.25),
+        0 20px 45px rgba(0, 0, 0, 0.18),
         0 5px 15px rgba(0, 0, 0, 0.08);
 
-    border: 1px solid rgba(255, 255, 255, 0.8);
-
-    margin-bottom: 0;
-
-    animation: loginCardOpen 0.4s ease;
+    animation: loginCardShow 0.3s ease;
 }
 
-@keyframes loginCardOpen {
+
+/* =========================================================
+   LOGIN CARD ANIMATION
+========================================================= */
+
+@keyframes loginCardShow {
 
     from {
         opacity: 0;
@@ -919,7 +895,9 @@ tbody tr:last-child td {
 }
 
 
-/* LOGIN TITLE */
+/* =========================================================
+   SYSTEM TITLE
+========================================================= */
 
 .login-card h1 {
     color: #172554;
@@ -930,13 +908,17 @@ tbody tr:last-child td {
 
     font-weight: 700;
 
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+
+    line-height: 1.3;
 
     margin-bottom: 8px;
 }
 
 
-/* LOGIN SUBTITLE */
+/* =========================================================
+   LOGIN SUBTITLE
+========================================================= */
 
 .login-card .subtitle {
     color: #64748b;
@@ -945,43 +927,34 @@ tbody tr:last-child td {
 
     font-size: 13px;
 
-    line-height: 1.6;
+    line-height: 1.5;
 
     margin: 0 auto 30px;
 
-    max-width: 320px;
+    max-width: 330px;
 }
 
 
-/* OPTIONAL SECOND TITLE */
-
-.login-card h2 {
-    color: #172554;
-
-    text-align: left;
-
-    font-size: 18px;
-
-    font-weight: 600;
-
-    margin-bottom: 20px;
-}
-
-
-/* LOGIN FORM */
+/* =========================================================
+   LOGIN FORM
+========================================================= */
 
 .login-card form {
+    width: 100%;
+
     display: flex;
 
     flex-direction: column;
-
-    width: 100%;
 }
 
 
-/* FORM LABEL */
+/* =========================================================
+   FORM LABEL
+========================================================= */
 
 .login-card label {
+    display: block;
+
     color: #334155;
 
     font-size: 13px;
@@ -989,19 +962,21 @@ tbody tr:last-child td {
     font-weight: 600;
 
     margin-bottom: 7px;
-
-    display: block;
 }
 
 
-/* INPUT GROUP */
+/* =========================================================
+   LOGIN INPUT
+========================================================= */
 
 .login-card input {
     width: 100%;
 
-    height: 45px;
+    height: 46px;
 
     padding: 0 13px;
+
+    margin-bottom: 18px;
 
     border: 1px solid #cbd5e1;
 
@@ -1011,11 +986,9 @@ tbody tr:last-child td {
 
     color: #1f2937;
 
-    margin-bottom: 18px;
+    font-size: 14px;
 
     outline: none;
-
-    font-size: 14px;
 
     transition: all 0.2s ease;
 }
@@ -1033,86 +1006,103 @@ tbody tr:last-child td {
 .login-card input:focus {
     border-color: #2563eb;
 
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-
-    background: #ffffff;
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
 
-/* INPUT PLACEHOLDER */
+/* PLACEHOLDER */
 
 .login-card input::placeholder {
     color: #94a3b8;
 }
 
 
-/* LOGIN BUTTON */
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
 
 .login-card form .btn-primary {
     width: 100%;
 
-    height: 45px;
+    height: 46px;
+
+    margin-top: 4px;
 
     padding: 0 15px;
 
-    margin-top: 5px;
+    border: none;
 
     border-radius: 7px;
+
+    background: #2563eb;
+
+    color: white;
 
     font-size: 14px;
 
     font-weight: 600;
 
-    background: #2563eb;
-
-    box-shadow: 0 3px 8px rgba(37, 99, 235, 0.20);
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.20);
 
     transition: all 0.2s ease;
 }
+
 
 .login-card form .btn-primary:hover {
     background: #1d4ed8;
 
     transform: translateY(-1px);
 
-    box-shadow: 0 5px 12px rgba(37, 99, 235, 0.25);
+    box-shadow:
+        0 6px 14px rgba(37, 99, 235, 0.25);
 }
+
 
 .login-card form .btn-primary:active {
     transform: translateY(0);
 }
 
 
-/* LOGIN MESSAGE */
+/* =========================================================
+   LOGIN ERROR / MESSAGE
+========================================================= */
 
 #loginMessage,
 #signupMessage {
-    font-size: 13px;
-
-    margin-top: 15px;
-
     min-height: 18px;
+
+    margin-top: 13px;
 
     color: #dc2626;
 
     text-align: center;
 
+    font-size: 13px;
+
     line-height: 1.4;
 }
 
 
-/* DIVIDER */
+/* =========================================================
+   DIVIDER
+========================================================= */
 
 .login-card hr {
+    width: 100%;
+
     border: none;
 
     border-top: 1px solid #e2e8f0;
 
-    margin: 27px 0 20px;
+    margin: 28px 0 20px;
 }
 
 
-/* TEXT ABOVE SECOND BUTTON */
+/* =========================================================
+   CREATE ACCOUNT TEXT
+========================================================= */
 
 .login-card > p {
     color: #64748b;
@@ -1127,47 +1117,272 @@ tbody tr:last-child td {
 }
 
 
-/* SECONDARY BUTTON */
+/* =========================================================
+   CREATE REQUESTER ACCOUNT BUTTON
+========================================================= */
 
 .login-card > .btn-secondary {
     display: block;
 
     width: 100%;
 
-    height: 43px;
+    height: 44px;
 
-    margin: 0 auto;
+    padding: 0 15px;
+
+    margin: 0;
+
+    border: none;
 
     border-radius: 7px;
+
+    background: #f1f5f9;
+
+    color: #1e40af;
+
+    border: 1px solid #cbd5e1;
 
     font-size: 13px;
 
     font-weight: 600;
 
-    background: #64748b;
-
-    transition: 0.2s;
+    transition: all 0.2s ease;
 }
 
+
 .login-card > .btn-secondary:hover {
-    background: #475569;
+    background: #dbeafe;
+
+    border-color: #93c5fd;
+
+    color: #1d4ed8;
 
     transform: translateY(-1px);
 }
 
 
-/* SIGNUP CARD */
+/* =========================================================
+   CREATE ACCOUNT CARD
+========================================================= */
 
 .signup-card {
-    display: none;
+    width: 100%;
+
+    background: #ffffff;
+
+    padding: 38px 40px;
+
+    border-radius: 14px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+        0 20px 45px rgba(0, 0, 0, 0.18);
+
+    animation: loginCardShow 0.3s ease;
 }
+
+
+/* =========================================================
+   CREATE ACCOUNT TITLE
+========================================================= */
+
+.signup-card h2 {
+    color: #172554;
+
+    text-align: center;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT DESCRIPTION
+========================================================= */
+
+.signup-card .subtitle {
+    color: #64748b;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    margin-bottom: 27px;
+}
+
+
+/* =========================================================
+   SIGNUP FORM
+========================================================= */
+
+.signup-card form {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   SIGNUP LABEL
+========================================================= */
+
+.signup-card label {
+    display: block;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    margin-bottom: 7px;
+}
+
+
+/* =========================================================
+   SIGNUP INPUT
+========================================================= */
+
+.signup-card input {
+    width: 100%;
+
+    height: 46px;
+
+    padding: 0 13px;
+
+    margin-bottom: 18px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #1f2937;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: all 0.2s ease;
+}
+
+
+.signup-card input:hover {
+    border-color: #94a3b8;
+}
+
+
+.signup-card input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+.signup-card input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   REGISTER BUTTON
+========================================================= */
 
 .signup-card .btn-primary {
     width: 100%;
+
+    height: 46px;
+
+    margin-top: 4px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.20);
+
+    transition: all 0.2s ease;
 }
 
 
-/* LOGIN FOOTER */
+.signup-card .btn-primary:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   SIGNUP MESSAGE
+========================================================= */
+
+.signup-card #signupMessage {
+    margin-top: 13px;
+
+    min-height: 18px;
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SIGNUP BACK BUTTON
+========================================================= */
+
+.signup-card .btn-secondary {
+    width: 100%;
+
+    height: 43px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #64748b;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+
+.signup-card .btn-secondary:hover {
+    background: #475569;
+}
+
+
+/* =========================================================
+   LOGIN FOOTER
+========================================================= */
 
 .login-footer {
     text-align: center;
@@ -1177,8 +1392,83 @@ tbody tr:last-child td {
     font-size: 12px;
 
     margin-top: 18px;
+
+    line-height: 1.5;
 }
 
+
+/* =========================================================
+   LOGIN RESPONSIVE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .login-page {
+        padding: 25px 15px;
+
+        align-items: center;
+    }
+
+    .login-container {
+        max-width: 400px;
+    }
+
+    .login-card,
+    .signup-card {
+        padding: 32px 25px;
+
+        border-radius: 12px;
+    }
+
+    .login-card h1 {
+        font-size: 22px;
+    }
+
+    .signup-card h2 {
+        font-size: 20px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL SCREEN
+========================================================= */
+
+@media (max-width: 400px) {
+
+    .login-page {
+        padding: 18px 12px;
+    }
+
+    .login-card,
+    .signup-card {
+        padding: 28px 20px;
+    }
+
+    .login-card h1 {
+        font-size: 20px;
+    }
+
+    .login-card .subtitle {
+        font-size: 12px;
+
+        margin-bottom: 25px;
+    }
+
+    .login-card input,
+    .signup-card input {
+        height: 44px;
+
+        font-size: 13px;
+    }
+
+    .login-card form .btn-primary,
+    .signup-card .btn-primary {
+        height: 44px;
+    }
+
+}
 
 /* =========================================================
    SCROLLBAR
