@@ -1436,8 +1436,10 @@ async function loadMaintenance() {
 
     } catch (err) {
         console.error("Load maintenance error:", err);
+        showToast("error", "Error", "Failed to load maintenance records. Check your table names and RLS.");
     }
 }
+
 
 function renderMaintenanceTable(list) {
     const tbody = document.getElementById("maintenanceTable");
