@@ -119,17 +119,15 @@ async function refreshCurrentUserProfile() {
     try {
         console.log("Refreshing user profile - Email:", currentUser.email, "ID:", currentUser.id);
 
-        // First try to fetch by email (more reliable than ID)
         const { data: userByEmail, error: emailError } = await supabaseClient
             .from("users")
             .select("*")
             .eq("email", currentUser.email)
-            .single();
+            .maybeSingle();
 
         console.log("User fetch by email result:", { userByEmail, emailError });
 
         if (userByEmail && !emailError) {
-            // User found by email - update session with correct ID
             currentUser = {
                 id: userByEmail.id,
                 name: userByEmail.name,
@@ -138,47 +136,35 @@ async function refreshCurrentUserProfile() {
             };
             sessionStorage.setItem("lab_user", JSON.stringify(currentUser));
             localStorage.setItem("lab_user", JSON.stringify(currentUser));
-            console.log("User profile refreshed successfully (by email):", currentUser);
+            console.log("User profile refreshed successfully:", currentUser);
             return;
         }
 
-        // User not found - try to create them automatically
-        console.warn("User not found in database, attempting to create automatically...");
+        console.warn("User not found in database, trying profiles fallback...");
+        const { data: profileRow, error: profileErr } = await supabaseClient
+            .from("profiles")
+            .select("*")
+            .eq("email", currentUser.email)
+            .maybeSingle();
 
-        const { data: newUser, error: createError } = await supabaseClient
-            .from("users")
-            .insert({
-                name: currentUser.name,
-                email: currentUser.email,
-                password: "default123", // Default password - user should change this
-                role: currentUser.role || "requester"
-            })
-            .select()
-            .single();
-
-        if (createError) {
-            console.error("Failed to create user:", createError);
-            console.warn("Using session data with original ID");
+        if (profileRow && !profileErr) {
+            currentUser = {
+                id: profileRow.id,
+                name: profileRow.full_name || profileRow.name,
+                email: profileRow.email,
+                role: profileRow.role || "requester"
+            };
+            sessionStorage.setItem("lab_user", JSON.stringify(currentUser));
+            localStorage.setItem("lab_user", JSON.stringify(currentUser));
+            console.log("Profile fallback loaded:", currentUser);
             return;
         }
 
-        // User created successfully - update session
-        currentUser = {
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email,
-            role: newUser.role
-        };
-        sessionStorage.setItem("lab_user", JSON.stringify(currentUser));
-        localStorage.setItem("lab_user", JSON.stringify(currentUser));
-        console.log("User created successfully and session updated:", currentUser);
-
+        console.warn("User not found in database; using session object.");
     } catch (err) {
         console.error("Exception in refreshCurrentUserProfile:", err);
-        console.warn("Using session data - NO REDIRECT WILL OCCUR");
     }
 }
-
 async function logout() {
     // BR-A4-10: Sensitive operation audit log
     if (currentUser) {
@@ -329,43 +315,55 @@ function refreshCurrentSection() {
 async function loadDashboard() {
     console.log("Loading dashboard...");
     try {
-        const { data: equipment } = await supabaseClient.from("equipment").select("*");
-        const { data: requests } = await supabaseClient.from("borrowing_requests").select("*, equipment:equipment_id(code, name), requester:requester_id(name)");
+        const [equipmentRes, requestsRes] = await Promise.all([
+            supabaseClient.from("equipment").select("*").order("code", { ascending: true }),
+            supabaseClient.from("borrowing_requests").select(`
+                *,
+                equipment:equipment_id(code, name),
+                requester:requester_id(name)
+            `).order("created_at", { ascending: false })
+        ]);
 
-        console.log("Dashboard data:", { equipmentCount: equipment?.length, requestsCount: requests?.length });
+        if (equipmentRes.error) throw equipmentRes.error;
+        if (requestsRes.error) throw requestsRes.error;
 
-        const totalEq = equipment ? equipment.length : 0;
-        const availEq = equipment ? equipment.filter(e => e.status === "available").length : 0;
-        const pendingReq = requests ? requests.filter(r => r.status === "pending").length : 0;
-        const myReq = requests ? requests.filter(r => r.requester_id === currentUser.id).length : 0;
+        const equipment = equipmentRes.data || [];
+        const requests = requestsRes.data || [];
+
+        const totalEq = equipment.length;
+        const availEq = equipment.filter(e => e.status === "available").length;
+        const pendingReq = requests.filter(r => r.status === "pending").length;
+        const myReq = requests.filter(r => r.requester_id === currentUser.id).length;
 
         document.getElementById("totalEquipment").textContent = totalEq;
         document.getElementById("availableEquipment").textContent = availEq;
         document.getElementById("pendingRequests").textContent = pendingReq;
         document.getElementById("myRequests").textContent = myReq;
 
-        // Render recent transactions preview
         const recentTbody = document.getElementById("dashboardRecentTable");
-        if (recentTbody && requests) {
-            recentTbody.innerHTML = "";
-            const recent = requests.slice(0, 5);
-            if (recent.length === 0) {
-                recentTbody.innerHTML = `<tr><td colspan="6" style="text-align: center;" class="muted">No borrowing transactions recorded yet.</td></tr>`;
-            } else {
-                recent.forEach(r => {
-                    recentTbody.innerHTML += `
-                        <tr>
-                            <td><span class="asset-tag">${r.equipment?.code || "-"}</span></td>
-                            <td>${r.equipment?.name || "Asset"}</td>
-                            <td>${r.requester?.name || "User"}</td>
-                            <td>${r.purpose}</td>
-                            <td>${r.due_date || "-"}</td>
-                            <td><span class="status status-${r.status}">${r.status}</span></td>
-                        </tr>
-                    `;
-                });
-            }
+        if (!recentTbody) return;
+
+        recentTbody.innerHTML = "";
+        const recent = requests.slice(0, 5);
+
+        if (recent.length === 0) {
+            recentTbody.innerHTML = `<tr><td colspan="6" style="text-align:center;" class="muted">No borrowing transactions recorded yet.</td></tr>`;
+            return;
         }
+
+        recent.forEach(r => {
+            recentTbody.innerHTML += `
+                <tr>
+                    <td><span class="asset-tag">${r.equipment?.code || "-"}</span></td>
+                    <td>${r.equipment?.name || "Asset"}</td>
+                    <td>${r.requester?.name || "User"}</td>
+                    <td>${r.purpose || ""}</td>
+                    <td>${r.due_date || "-"}</td>
+                    <td><span class="status status-${r.status}">${r.status}</span></td>
+                </tr>
+            `;
+        });
+
     } catch (e) {
         console.error("Dashboard error:", e);
         console.error("Error details:", e.message, e.code);
@@ -391,7 +389,7 @@ async function loadEquipment() {
 
     } catch (err) {
         console.error("Load equipment error:", err);
-        showToast("error", "Error", "Failed to load equipment inventory.");
+        showToast("error", "Error", "Failed to load equipment inventory. Check your Supabase table names and RLS.");
     }
 }
 
@@ -613,14 +611,10 @@ async function loadRequests() {
             .select(`
                 *,
                 equipment:equipment_id(id, code, name, status, location),
-                requester:requester_id(id, name, email, role),
-                approver:approved_by(name),
-                releaser:released_by(name),
-                returner:returned_by(name)
+                requester:requester_id(id, name, email, role)
             `)
             .order("created_at", { ascending: false });
 
-        // Requesters can only view their own requests and history
         if (currentUser.role === "requester") {
             query = query.eq("requester_id", currentUser.id);
         }
@@ -633,7 +627,7 @@ async function loadRequests() {
 
     } catch (err) {
         console.error("Load requests error:", err);
-        showToast("error", "Error", "Failed to load borrowing requests.");
+        showToast("error", "Error", "Failed to load borrowing requests. Check your Supabase table names and RLS.");
     }
 }
 
