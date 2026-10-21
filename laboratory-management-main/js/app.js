@@ -606,28 +606,23 @@ async function deleteEquipment(id) {
 
 async function loadRequests() {
     try {
-        let query = supabaseClient
+        const { data, error } = await supabaseClient
             .from("borrowing_requests")
             .select(`
                 *,
-                equipment:equipment_id(id, code, name, status, location),
-                requester:requester_id(id, name, email, role)
+                equipment:equipment_id(code, name, status),
+                requester:requester_id(id, name, email)
             `)
             .order("created_at", { ascending: false });
 
-        if (currentUser.role === "requester") {
-            query = query.eq("requester_id", currentUser.id);
-        }
-
-        const { data, error } = await query;
         if (error) throw error;
 
+        console.log("ALL REQUESTS:", data);
         allRequestsCache = data || [];
         renderRequestsTable(allRequestsCache);
 
     } catch (err) {
         console.error("Load requests error:", err);
-        showToast("error", "Error", "Failed to load borrowing requests. Check your Supabase table names and RLS.");
     }
 }
 
