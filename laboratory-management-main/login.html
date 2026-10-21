@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Laboratory Asset & Service Management</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="login-page">
+
+    <div class="login-wrapper">
+
+        <!-- LOGIN CARD -->
+        <div class="login-card" id="loginBox">
+
+            <div class="login-brand">
+                <div class="login-brand-icon">🔬</div>
+                <h1>Lab Asset & Service</h1>
+                <p>Role-Based Asset Transaction and Approval Management</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="e.g. admin@lab.edu"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; margin-top: 6px;">
+                    Sign In to System
+                </button>
+            </form>
+
+            <div id="loginMessage" class="hidden" style="margin-top: 14px;"></div>
+
+            <div class="divider">need an account?</div>
+
+            <button
+                type="button"
+                class="btn-light"
+                style="width: 100%; justify-content: center;"
+                onclick="showSignup()">
+                Register New Requester Account
+            </button>
+
+        </div>
+
+        <!-- SIGNUP CARD -->
+        <div class="login-card signup-card hidden" id="signupBox">
+
+            <div class="login-brand">
+                <div class="login-brand-icon">📝</div>
+                <h1>Create Account</h1>
+                <p>Register as Laboratory Requester</p>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input
+                        type="text"
+                        id="signupName"
+                        placeholder="e.g. Alex Johnson"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="e.g. alex@lab.edu"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="Minimum 6 characters"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupRole">Account Role</label>
+                    <select id="signupRole" required style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); font-family: inherit; font-size: 14px;">
+                        <option value="requester">Requester</option>
+                        <option value="staff">Laboratory Staff</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-success" style="width: 100%; padding: 12px; margin-top: 6px;">
+                    Create Account
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-light"
+                    style="width: 100%; justify-content: center; margin-top: 8px;"
+                    onclick="hideSignup()">
+                    Back to Login
+                </button>
+            </form>
+
+            <div id="signupMessage" class="hidden" style="margin-top: 14px;"></div>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+
+</body>
+
+</html>
