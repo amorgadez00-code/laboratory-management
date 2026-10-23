@@ -1,8 +1,3 @@
-// =========================================================
-// LABORATORY ASSET MANAGEMENT - AUTHENTICATION
-// Supports direct user authentication & fast role switching
-// =========================================================
-
 document.addEventListener("DOMContentLoaded", async () => {
     // Check if user is already logged in
     const cachedUser = getCurrentUser();
