@@ -1,17 +1,9 @@
-// =========================================================
-// LABORATORY ASSET AND SERVICE MANAGEMENT SYSTEM
-// Comprehensive Business Rules, Workflow & Audit Trail Engine
-// =========================================================
-
 let currentUser = null;
 let allEquipmentCache = [];
 let allRequestsCache = [];
 let allAuditCache = [];
 let activeSection = "dashboard";
 
-// =========================================================
-// SYSTEM INITIALIZATION
-// =========================================================
 
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("=== APP INITIALIZATION STARTING ===");
@@ -30,8 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentUser = storedUser;
     console.log("Current user set from session:", currentUser);
 
-    // Refresh user profile from database to ensure correct ID
-    // Now uses email lookup which is more reliable
+    
     console.log("=== CALLING refreshCurrentUserProfile ===");
     await refreshCurrentUserProfile();
     console.log("=== refreshCurrentUserProfile COMPLETED ===");
@@ -260,9 +251,6 @@ function setupRoleInterface() {
     }
 }
 
-// =========================================================
-// SECTION NAVIGATION & PERMISSION GUARDS (TC-A4-01)
-// =========================================================
 
 function showSection(sectionId) {
     const adminRestricted = ["users", "audit", "reports"];
